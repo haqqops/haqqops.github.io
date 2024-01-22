@@ -15,6 +15,7 @@ def test_smtp_server():
 
         # Connect to the SMTP server
         server = smtplib.SMTP(smtp_server, smtp_port)
+        server.set_debuglevel(1)  # Enable debug output
         server.starttls()
 
         # Log in to the account
@@ -32,12 +33,16 @@ def test_smtp_server():
         server.sendmail(sender_email, recipient_email, message.as_string())
         print("Test email sent successfully.")
 
+    except smtplib.SMTPException as e:
+        print(f"SMTP Error: {e}")
     except Exception as e:
-        print(f"Error: {e}")
-
+        print(f"General Error: {e}")
     finally:
         # Close the connection
-        server.quit()
+        try:
+            server.quit()
+        except Exception as e:
+            print(f"Error in closing the connection: {e}")
 
 # Call the function to test
 test_smtp_server()
